@@ -1,0 +1,370 @@
+/**
+ * Landing / product motion system: tokens, keyframes, utilities.
+ * Prefer these over ad-hoc durations or inline animation strings.
+ */
+
+:root {
+  --duration-cta: 180ms;
+  --duration-card: 220ms;
+  --duration-reveal: 520ms;
+  --duration-float-robot: 10s;
+  --duration-float-dashboard: 11.5s;
+  --duration-glow-pulse: 9s;
+  --duration-shimmer: 14s;
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --float-robot-y: -3px;
+  --float-dashboard-y: -2px;
+}
+
+@keyframes motion-float-robot {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, var(--float-robot-y), 0);
+  }
+}
+
+@keyframes motion-float-dashboard {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, var(--float-dashboard-y), 0);
+  }
+}
+
+@keyframes motion-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes motion-circuit-shimmer {
+  0%,
+  100% {
+    opacity: 0.028;
+  }
+  50% {
+    opacity: 0.05;
+  }
+}
+
+@keyframes motion-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes motion-stagger-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes motion-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes motion-activity-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes motion-underline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Motion utility classes — plain CSS for Turbopack-safe parsing. */
+
+.motion-float-robot {
+  animation: motion-float-robot var(--duration-float-robot) var(--ease-in-out) infinite;
+  will-change: transform;
+}
+
+.motion-float-dashboard {
+  animation: motion-float-dashboard var(--duration-float-dashboard) var(--ease-in-out) infinite;
+  will-change: transform;
+}
+
+.motion-glow-pulse {
+  animation: motion-glow-pulse var(--duration-glow-pulse) var(--ease-in-out) infinite;
+}
+
+.motion-circuit-shimmer {
+  animation: motion-circuit-shimmer var(--duration-shimmer) var(--ease-in-out) infinite;
+}
+
+.motion-progress-fill {
+  transform-origin: left center;
+  animation: motion-progress-fill var(--duration-reveal) var(--ease-premium) both;
+}
+
+.motion-stagger-in {
+  animation: motion-stagger-in var(--duration-reveal) var(--ease-premium) both;
+}
+
+.motion-reveal {
+  animation: motion-reveal var(--duration-reveal) var(--ease-premium) both;
+}
+
+.motion-activity-in {
+  animation: motion-activity-in var(--duration-card) var(--ease-premium) both;
+}
+
+.motion-delay-1 {
+  animation-delay: 60ms;
+}
+.motion-delay-2 {
+  animation-delay: 120ms;
+}
+.motion-delay-3 {
+  animation-delay: 180ms;
+}
+.motion-delay-4 {
+  animation-delay: 240ms;
+}
+.motion-delay-5 {
+  animation-delay: 300ms;
+}
+.motion-delay-6 {
+  animation-delay: 360ms;
+}
+
+.motion-cta {
+  transition:
+    transform var(--duration-cta) var(--ease-out),
+    box-shadow var(--duration-cta) var(--ease-out),
+    filter var(--duration-cta) var(--ease-out),
+    border-color var(--duration-cta) var(--ease-out),
+    background-color var(--duration-cta) var(--ease-out);
+}
+
+.motion-cta-primary {
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+}
+
+.motion-cta-primary:hover,
+.motion-cta-primary:focus-visible,
+.group-cta:hover .motion-cta-primary,
+.group-cta:focus-visible .motion-cta-primary {
+  transform: scale(1.02);
+  background-position: 100% 50%;
+  filter: brightness(1.04);
+}
+
+.motion-cta-primary:active,
+.group-cta:active .motion-cta-primary {
+  transform: scale(0.98);
+}
+
+.motion-cta-secondary:hover,
+.motion-cta-secondary:focus-visible,
+.group-cta:hover .motion-cta-secondary,
+.group-cta:focus-visible .motion-cta-secondary {
+  box-shadow: var(--shadow-sm);
+}
+
+.motion-card {
+  transition:
+    transform var(--duration-card) var(--ease-premium),
+    box-shadow var(--duration-card) var(--ease-premium),
+    border-color var(--duration-card) var(--ease-premium);
+}
+
+.motion-nav-link {
+  position: relative;
+}
+
+.motion-nav-link::after {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.35rem;
+  left: 0.75rem;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: color-mix(in oklab, #3b82f6 70%, transparent);
+  transition: transform var(--duration-cta) var(--ease-premium);
+}
+
+.motion-nav-link:hover::after,
+.motion-nav-link:focus-visible::after,
+.motion-nav-link[aria-expanded='true']::after {
+  transform: scaleX(1);
+}
+
+.motion-link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  transition:
+    color var(--duration-normal) var(--ease-out),
+    background-size var(--duration-cta) var(--ease-premium);
+}
+
+.motion-link-underline:hover,
+.motion-link-underline:focus-visible {
+  background-size: 100% 1px;
+}
+
+.motion-social {
+  transition:
+    transform var(--duration-cta) var(--ease-premium),
+    box-shadow var(--duration-cta) var(--ease-premium),
+    border-color var(--duration-cta) var(--ease-premium),
+    color var(--duration-cta) var(--ease-out);
+}
+
+.motion-social:hover,
+.motion-social:focus-visible {
+  transform: scale(1.06) rotate(3deg);
+  box-shadow: var(--shadow-sm), 0 0 12px color-mix(in oklab, #60a5fa 28%, transparent);
+}
+
+.motion-icon-pop {
+  transition: transform var(--duration-card) var(--ease-premium);
+}
+
+.group:hover .motion-icon-pop,
+.group:focus-within .motion-icon-pop {
+  transform: scale(1.08);
+}
+
+.motion-arrow-slide {
+  transition: transform var(--duration-card) var(--ease-premium);
+}
+
+.group:hover .motion-arrow-slide,
+.group:focus-within .motion-arrow-slide {
+  transform: translateX(6px);
+}
+
+.motion-stat-card {
+  transition:
+    transform var(--duration-card) var(--ease-premium),
+    box-shadow var(--duration-card) var(--ease-premium),
+    border-color var(--duration-card) var(--ease-premium);
+}
+
+.motion-stat-card:hover,
+.motion-stat-card:focus-within {
+  transform: translate3d(0, -2px, 0);
+  box-shadow: var(--shadow-sm), 0 0 0 1px color-mix(in oklab, #93c5fd 35%, transparent);
+}
+
+.motion-chip {
+  transition:
+    transform var(--duration-card) var(--ease-premium),
+    box-shadow var(--duration-card) var(--ease-premium),
+    border-color var(--duration-card) var(--ease-premium),
+    background-color var(--duration-card) var(--ease-premium);
+}
+
+.motion-chip:hover,
+.motion-chip:focus-within {
+  transform: translate3d(0, -2px, 0);
+  background-color: color-mix(in oklab, white 96%, #eff6ff);
+  border-color: var(--border-glass-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.motion-circuit-flow {
+  animation: circuit-current var(--motion-duration, 2.8s) ease-in-out
+    var(--motion-delay, 0s) infinite;
+}
+
+.motion-circuit-node {
+  animation: circuit-node-pulse var(--motion-duration, 2.8s) ease-in-out
+    var(--motion-delay, 0s) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-float-robot,
+  .motion-float-dashboard,
+  .motion-glow-pulse,
+  .motion-circuit-shimmer,
+  .motion-progress-fill,
+  .motion-stagger-in,
+  .motion-reveal,
+  .motion-activity-in,
+  .motion-circuit-flow,
+  .motion-circuit-node {
+    animation: none !important;
+  }
+
+  .motion-cta,
+  .motion-card,
+  .motion-nav-link::after,
+  .motion-link-underline,
+  .motion-icon-pop,
+  .motion-arrow-slide,
+  .motion-social,
+  .motion-stat-card,
+  .motion-chip {
+    transition: none !important;
+  }
+
+  .motion-cta-primary:hover,
+  .motion-cta-primary:active,
+  .motion-cta-primary:focus-visible,
+  .group-cta:hover .motion-cta-primary,
+  .group-cta:focus-visible .motion-cta-primary,
+  .group-cta:active .motion-cta-primary,
+  .motion-social:hover,
+  .motion-social:focus-visible,
+  .group:hover .motion-icon-pop,
+  .group:focus-within .motion-icon-pop,
+  .group:hover .motion-arrow-slide,
+  .group:focus-within .motion-arrow-slide,
+  .motion-stat-card:hover,
+  .motion-stat-card:focus-within,
+  .motion-chip:hover,
+  .motion-chip:focus-within {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .motion-stagger-in,
+  .motion-reveal,
+  .motion-activity-in,
+  .motion-progress-fill {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

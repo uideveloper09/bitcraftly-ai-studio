@@ -1,0 +1,25 @@
+FROM node:22-alpine AS base
+RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* turbo.json tsconfig.base.json ./
+COPY packages ./packages
+COPY services ./services
+COPY apps/api ./apps/api
+RUN pnpm install --frozen-lockfile=false
+
+FROM deps AS build
+RUN pnpm --filter @bitcraftly/database generate
+RUN pnpm --filter @bitcraftly/shared build
+RUN pnpm --filter @bitcraftly/ai build
+RUN pnpm --filter @bitcraftly/database build
+RUN pnpm --filter @bitcraftly/reel-engine build
+RUN pnpm --filter @bitcraftly/api build
+
+FROM base AS runner
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=build /app ./
+EXPOSE 4000
+CMD ["pnpm", "--filter", "@bitcraftly/api", "start"]

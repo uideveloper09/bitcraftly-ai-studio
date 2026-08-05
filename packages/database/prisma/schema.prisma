@@ -1,0 +1,269 @@
+// Bitcraftly AI Studio — Prisma schema
+// Designed for multi-module scalability (reels, posts, images, video, etc.)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Auth (Better Auth compatible) ───────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+  projects      Project[]
+  reels         Reel[]
+  generations   Generation[]
+  media         Media[]
+  settings      Settings?
+  activityLogs  ActivityLog[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verifications")
+}
+
+// ─── Domain ──────────────────────────────────────────────────────────────────
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  reels       Reel[]
+  generations Generation[]
+  media       Media[]
+
+  @@index([userId])
+  @@map("projects")
+}
+
+enum ReelStatus {
+  DRAFT
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+  ARCHIVED
+}
+
+model Reel {
+  id          String     @id @default(cuid())
+  title       String
+  topic       String
+  language    String     @default("en")
+  style       String     @default("cinematic")
+  voice       String     @default("nova")
+  duration    Int        @default(30)
+  status      ReelStatus @default(DRAFT)
+  script      Json?
+  thumbnailUrl String?
+  videoUrl    String?
+  errorMessage String?
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  completedAt DateTime?
+
+  generations Generation[]
+  media       Media[]
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("reels")
+}
+
+enum GenerationStatus {
+  PENDING
+  QUEUED
+  PROCESSING
+  SCRIPTING
+  IMAGING
+  VOICING
+  RENDERING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum GenerationType {
+  REEL
+  POST
+  IMAGE
+  VIDEO
+  BANNER
+  THUMBNAIL
+  BLOG
+}
+
+model Generation {
+  id           String           @id @default(cuid())
+  type         GenerationType   @default(REEL)
+  status       GenerationStatus @default(PENDING)
+  progress     Int              @default(0)
+  currentStep  String?
+  input        Json
+  output       Json?
+  errorMessage String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId    String?
+  project      Project?         @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  reelId       String?
+  reel         Reel?            @relation(fields: [reelId], references: [id], onDelete: SetNull)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([reelId])
+  @@index([status])
+  @@index([type])
+  @@map("generations")
+}
+
+enum MediaType {
+  IMAGE
+  AUDIO
+  VIDEO
+  SCRIPT
+  THUMBNAIL
+}
+
+model Media {
+  id          String    @id @default(cuid())
+  type        MediaType
+  key         String
+  url         String
+  mimeType    String
+  sizeBytes   Int       @default(0)
+  width       Int?
+  height      Int?
+  durationSec Float?
+  metadata    Json?
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  reelId      String?
+  reel        Reel?     @relation(fields: [reelId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([reelId])
+  @@index([type])
+  @@map("media")
+}
+
+model Settings {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName         String?
+  defaultLanguage     String   @default("en")
+  defaultStyle        String   @default("cinematic")
+  defaultVoice        String   @default("nova")
+  defaultDuration     Int      @default(30)
+  theme               String   @default("system")
+  emailNotifications  Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("settings")
+}
+
+enum ActivityType {
+  REEL_CREATED
+  REEL_GENERATED
+  REEL_DOWNLOADED
+  REEL_FAILED
+  SETTINGS_UPDATED
+  USER_LOGIN
+}
+
+model ActivityLog {
+  id        String       @id @default(cuid())
+  type      ActivityType
+  message   String
+  metadata  Json?
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([type])
+  @@map("activity_logs")
+}

@@ -1,0 +1,59 @@
+{
+  "name": "bitcraftly-ai-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bitcraftly AI Studio — enterprise AI content generation platform",
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=20.9.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "dev:web": "turbo run dev --filter=@bitcraftly/web",
+    "dev:api": "turbo run dev --filter=@bitcraftly/api",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "prepare": "husky",
+    "db:generate": "pnpm --filter @bitcraftly/database generate",
+    "db:migrate": "pnpm --filter @bitcraftly/database migrate",
+    "db:push": "pnpm --filter @bitcraftly/database push",
+    "db:studio": "pnpm --filter @bitcraftly/database studio",
+    "clean": "turbo run clean && rimraf node_modules",
+    "docker:up": "docker compose -f docker/docker-compose.dev.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.dev.yml down",
+    "docker:logs": "docker compose -f docker/docker-compose.dev.yml logs -f",
+    "docker:stack": "docker compose -f docker/docker-compose.yml up -d --build"
+  },
+  "lint-staged": {
+    "apps/web/src/**/*.{ts,tsx}": [
+      "pnpm --dir apps/web exec eslint --fix --max-warnings=0",
+      "prettier --write"
+    ],
+    "apps/web/*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "packages/**/*.{ts,tsx,css}": [
+      "prettier --write"
+    ],
+    "services/**/*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.12",
+    "rimraf": "^6.0.1",
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3"
+  }
+}
