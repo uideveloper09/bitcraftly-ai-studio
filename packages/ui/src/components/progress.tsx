@@ -5,9 +5,17 @@ export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
   value: number;
   max?: number;
   label?: string;
+  variant?: 'default' | 'brand';
 }
 
-export function Progress({ value, max = 100, label, className, ...props }: ProgressProps) {
+export function Progress({
+  value,
+  max = 100,
+  label,
+  variant = 'default',
+  className,
+  ...props
+}: ProgressProps) {
   const clamped = Math.min(Math.max(value, 0), max);
   const percent = max === 0 ? 0 : Math.round((clamped / max) * 100);
 
@@ -28,7 +36,10 @@ export function Progress({ value, max = 100, label, className, ...props }: Progr
         className="h-1.5 overflow-hidden rounded-[var(--radius-full)] bg-[var(--color-surface-elevated)]"
       >
         <div
-          className="h-full rounded-[var(--radius-full)] bg-[var(--color-accent)] transition-[width] duration-[var(--duration-normal)] ease-[var(--ease-out)]"
+          className={cn(
+            'h-full rounded-[var(--radius-full)] transition-[width] duration-[var(--duration-normal)] ease-[var(--ease-out)]',
+            variant === 'brand' ? 'bg-[image:var(--gradient-brand)]' : 'bg-[var(--color-accent)]',
+          )}
           style={{ width: `${percent}%` }}
         />
       </div>

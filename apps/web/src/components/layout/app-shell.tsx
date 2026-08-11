@@ -13,8 +13,13 @@ function ShellFrame({ children }: { children: ReactNode }) {
   const { mobileNavOpen, setMobileNavOpen } = useShell();
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-bg)]">
-      <div className="hidden md:flex">
+    <div className="relative flex min-h-screen bg-[var(--color-bg)]">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute right-[-8%] top-[-12%] h-[42%] w-[46%] rounded-full bg-[radial-gradient(circle,rgba(147,197,253,0.09)_0%,transparent_70%)] blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[-6%] h-[36%] w-[40%] rounded-full bg-[radial-gradient(circle,rgba(167,139,250,0.07)_0%,transparent_70%)] blur-3xl" />
+      </div>
+
+      <div className="relative z-10 hidden md:flex">
         <Sidebar />
       </div>
 
@@ -27,7 +32,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
         <NavLinks onNavigate={() => setMobileNavOpen(false)} />
       </Drawer>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
         <Topbar />
         <main className="flex-1 overflow-auto p-[var(--space-4)] md:p-[var(--space-6)] lg:p-[var(--space-8)]">
           {children}

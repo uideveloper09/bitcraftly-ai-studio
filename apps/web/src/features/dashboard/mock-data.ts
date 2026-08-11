@@ -2,12 +2,16 @@
  * Dashboard mock data — UI only, no backend.
  */
 
+export type StatTone = 'sky' | 'emerald' | 'violet' | 'amber';
+
 export interface DashboardStat {
   id: string;
   label: string;
   value: string;
   hint: string;
   trend: string;
+  tone: StatTone;
+  progress?: number;
 }
 
 export interface ActivityItem {
@@ -47,6 +51,7 @@ export const DASHBOARD_STATS: DashboardStat[] = [
     value: '1,284',
     hint: 'All modules',
     trend: '+12% this week',
+    tone: 'violet',
   },
   {
     id: 'todays-jobs',
@@ -54,6 +59,7 @@ export const DASHBOARD_STATS: DashboardStat[] = [
     value: '36',
     hint: 'Completed today',
     trend: '8 in progress',
+    tone: 'emerald',
   },
   {
     id: 'queue-status',
@@ -61,6 +67,7 @@ export const DASHBOARD_STATS: DashboardStat[] = [
     value: 'Healthy',
     hint: '3 active workers',
     trend: 'Avg wait 14s',
+    tone: 'sky',
   },
   {
     id: 'storage-used',
@@ -68,6 +75,8 @@ export const DASHBOARD_STATS: DashboardStat[] = [
     value: '18.4 GB',
     hint: 'of 100 GB',
     trend: '82% free',
+    tone: 'amber',
+    progress: 18,
   },
 ];
 

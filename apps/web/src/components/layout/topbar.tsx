@@ -19,7 +19,7 @@ export function Topbar() {
   const crumbs = getBreadcrumbs(pathname);
 
   return (
-    <header className="bg-[var(--color-surface)]/80 flex h-[var(--topbar-height)] shrink-0 items-center justify-between gap-[var(--space-4)] border-b border-[var(--color-border)] px-[var(--space-4)] backdrop-blur-md md:px-[var(--space-6)]">
+    <header className="sticky top-0 z-20 flex h-[var(--topbar-height)] shrink-0 items-center justify-between gap-[var(--space-4)] border-b border-[var(--border-glass)] bg-[color-mix(in_oklab,var(--color-surface)_78%,transparent)] px-[var(--space-4)] shadow-[var(--shadow-xs)] backdrop-blur-xl md:px-[var(--space-6)]">
       <div className="flex min-w-0 items-center gap-[var(--space-3)]">
         <Button
           variant="ghost"
@@ -35,7 +35,7 @@ export function Topbar() {
           <BrandLogo href={ROUTES.STUDIO} />
         </div>
 
-        <div className="min-w-0 lg:border-l lg:border-[var(--color-border)] lg:pl-[var(--space-4)]">
+        <div className="min-w-0 lg:border-l lg:border-[var(--border-glass)] lg:pl-[var(--space-4)]">
           <Breadcrumbs
             className="hidden sm:block"
             items={crumbs}
@@ -47,7 +47,7 @@ export function Topbar() {
               ) : null
             }
           />
-          <h1 className="truncate font-semibold tracking-tight text-[var(--text-sm)] sm:mt-0.5">
+          <h1 className="truncate font-semibold tracking-tight text-[var(--color-fg)] text-[var(--text-sm)] sm:mt-0.5">
             {title}
           </h1>
         </div>
@@ -60,7 +60,7 @@ export function Topbar() {
             type="search"
             aria-label={UI_COPY.SEARCH_PLACEHOLDER}
             placeholder={UI_COPY.SEARCH_PLACEHOLDER}
-            className="h-9 pl-9"
+            className="h-9 border-[var(--border-glass)] bg-white/80 pl-9 shadow-[var(--shadow-xs)]"
             disabled
           />
         </div>

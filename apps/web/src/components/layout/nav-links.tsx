@@ -48,16 +48,17 @@ export function NavLinks({
             onClick={onNavigate}
             title={collapsed ? label : undefined}
             className={cn(
-              'flex items-center gap-2.5 rounded-[var(--radius-xl)] px-3 py-2 font-medium text-[var(--text-sm)] transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]',
+              'flex items-center gap-2.5 rounded-[var(--radius-xl)] px-3 py-2 font-medium text-[var(--text-sm)]',
+              'transition-[background-color,color,box-shadow] duration-[var(--duration-cta)] ease-[var(--ease-out)]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-info)] focus-visible:ring-offset-2',
               collapsed && 'justify-center px-2',
               active
-                ? 'bg-[var(--color-surface-elevated)] text-[var(--color-fg)]'
-                : 'text-[var(--color-fg-muted)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)]',
+                ? 'bg-[color-mix(in_oklab,#3b82f6_12%,white)] text-[#1d4ed8] shadow-[var(--shadow-xs)]'
+                : 'text-[var(--color-fg-muted)] hover:bg-[color-mix(in_oklab,#eff6ff_80%,white)] hover:text-[#2563eb]',
             )}
             aria-current={active ? 'page' : undefined}
           >
-            <Icon className="size-4 shrink-0 opacity-70" />
+            <Icon className={cn('size-4 shrink-0', active ? 'opacity-100' : 'opacity-70')} />
             {!collapsed ? <span>{label}</span> : <span className="sr-only">{label}</span>}
           </Link>
         );
